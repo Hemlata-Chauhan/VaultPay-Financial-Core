@@ -16,10 +16,17 @@ export default function PaymentSuccess() {
             })
         );
 
-        const timer =
-            setTimeout(() => {
-                navigate("/dashboard");
+        useEffect(() => {
+
+            const timer = setTimeout(() => {
+
+                window.location.href = "/dashboard";
+
             }, 3000);
+
+            return () => clearTimeout(timer);
+
+        }, []);
 
         return () =>
             clearTimeout(timer);

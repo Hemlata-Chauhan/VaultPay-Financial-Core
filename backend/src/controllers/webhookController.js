@@ -22,7 +22,7 @@ const sendReceiptEmail =
 exports.handleStripeWebhook =
     async (req, res) => {
        
-        console.log("🔥 WEBHOOK HIT");
+
         let event;
 
         try {
@@ -36,7 +36,6 @@ exports.handleStripeWebhook =
                     process.env
                         .STRIPE_WEBHOOK_SECRET
                 );
-            console.log("EVENT:", event.type);
         } catch (err) {
             console.log(
                 "Webhook Signature Failed"
@@ -65,20 +64,19 @@ exports.handleStripeWebhook =
                     break;
                 }
 
-            
+                // Mark invoice paid
                 invoice.status = "Paid";
                 invoice.paymentIntentId =
                     session.payment_intent;
 
                 await invoice.save();
 
-                console.log("UPDATED IN DB:", invoice.status);
                 console.log(
                     "Invoice marked Paid:",
                     invoice._id
                 );
 
-    
+                // Save payment record
                 await Payment.create({
                     user: invoice.owner,
                     invoice: invoice._id,
@@ -92,7 +90,7 @@ exports.handleStripeWebhook =
                     "Payment saved successfully"
                 );
 
-            
+                // Find user
                 const user =
                     await User.findById(
                         invoice.owner
@@ -105,7 +103,7 @@ exports.handleStripeWebhook =
                     break;
                 }
 
-                
+                // Generate PDF
                 const pdfPath =
                     await generateReceipt(
                         invoice,
@@ -117,7 +115,7 @@ exports.handleStripeWebhook =
                     pdfPath
                 );
 
-                
+                // Send Email
                 await sendReceiptEmail(
                     user.email,
                     user.name,

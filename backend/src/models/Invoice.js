@@ -34,9 +34,7 @@ const invoiceSchema = new mongoose.Schema(
 
         receiptUrl: {
             type: String
-        },
-
-        
+        }
 
     },
     {

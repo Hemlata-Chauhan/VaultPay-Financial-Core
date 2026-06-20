@@ -12,10 +12,27 @@ export default function Dashboard() {
 
     const username = localStorage.getItem("username") || "User";
 
+    const loadInvoices = async () => {
+        try {
+            const res = await API.get("/invoices");
+            setInvoices([...res.data].reverse());
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const loadPayments = async () => {
+        try {
+            const res = await API.get("/payments");
+            setPayments(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
-        API.get("/invoices").then(res =>
-            setInvoices([...res.data].reverse())
-        );
+        loadInvoices();
+        loadPayments();
     }, []);
 
     useEffect(() => {

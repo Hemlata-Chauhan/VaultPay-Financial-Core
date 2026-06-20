@@ -10,9 +10,9 @@ const {
     "../controllers/webhookController"
 );
 
-router.post("/stripe", (req, res, next) => {
-    console.log("🔥 ROUTE REACHED");
-    next();
-}, handleStripeWebhook);
+router.post(
+    "/stripe",
+    handleStripeWebhook
+);
 
 module.exports = router;
