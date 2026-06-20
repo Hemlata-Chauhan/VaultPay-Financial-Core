@@ -31,16 +31,26 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        loadInvoices();
-        loadPayments();
+        API.get("/invoices")
+            .then(res => {
+                console.log("Invoices:", res.data);
+                setInvoices([...res.data].reverse());
+            })
+            .catch(err => {
+                console.error("Invoice Error:", err);
+            });
     }, []);
 
     useEffect(() => {
-        API.get("/payments").then(res =>
-            setPayments(res.data)
-        );
+        API.get("/payments")
+            .then(res => {
+                console.log("Payments:", res.data);
+                setPayments(res.data);
+            })
+            .catch(err => {
+                console.error("Payment Error:", err);
+            });
     }, []);
-
     const payInvoice = async (invoiceId) => {
         const res = await API.post(`/payments/checkout/${invoiceId}`);
         window.location.href = res.data.url;
