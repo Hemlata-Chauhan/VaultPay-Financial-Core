@@ -31,56 +31,32 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-
         API.get("/invoices")
             .then(res => {
-
-                console.log(
-                    "Invoices API:",
-                    res.data
-                );
-
-                setInvoices(
-                    [...res.data].reverse()
-                );
-
+                console.log("Invoices:", res.data);
+                setInvoices([...res.data].reverse());
             })
             .catch(err => {
-
-                console.log(
-                    "Invoice Error:",
-                    err.response?.data
-                );
-
+                console.error("Invoice Error:", err);
             });
-
     }, []);
 
     useEffect(() => {
-
         API.get("/payments")
             .then(res => {
-
-                console.log(
-                    "Payments API:",
-                    res.data
-                );
-
-                setPayments(
-                    res.data
-                );
-
+                console.log("Payments:", res.data);
+                setPayments(res.data);
             })
             .catch(err => {
-
-                console.log(
-                    "Payment Error:",
-                    err.response?.data
-                );
-
+                console.error("Payment Error:", err);
             });
-
     }, []);
+
+    
+    const payInvoice = async (invoiceId) => {
+        const res = await API.post(`/payments/checkout/${invoiceId}`);
+        window.location.href = res.data.url;
+    };
 
     const createInvoice = async (e) => {
         e.preventDefault();
