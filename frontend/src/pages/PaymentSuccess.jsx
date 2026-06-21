@@ -14,7 +14,7 @@ export default function PaymentSuccess() {
         );
 
         const timer = setTimeout(() => {
-            navigate("/dashboard");
+            window.location.href = "/dashboard";
         }, 3000);
 
         return () => clearTimeout(timer);
